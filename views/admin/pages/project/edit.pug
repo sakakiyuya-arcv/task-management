@@ -1,0 +1,38 @@
+extends ../../layouts/default.pug
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    h1 Chỉnh sửa dự án
+
+    .card
+        .card-body
+            form(action=`${prefixAdmin}/projects/edit/${project._id}?_method=PATCH` method="POST")
+                input(type="hidden" name="returnUrl" value=returnUrl)
+                div(class="form-group mb-3")
+                    label(for="title") Tiêu đề
+                    input(type="text" class="form-control" id="title" name="title" value=project.title required)
+
+                div(class="form-group mb-3")
+                    label(for="description") Mô tả
+                    textarea(class="form-control" id="description" name="description" rows="5") #{project.description}
+
+                div(class="form-group mb-3")
+                    label(for="due_date") Hạn chót
+                    input(
+                        type="date" 
+                        class="form-control" 
+                        id="due_date" 
+                        name="due_date" 
+                        value=(project.due_date ? new Date(project.due_date).toISOString().split('T')[0] : "")
+                    ) 
+
+                div(class="form-group mb-3")
+                    label(for="status") Trạng thái
+                    select(class="form-control" id="status" name="status")
+                        option(value="in-progress" selected=(project.status == 'in-progress')) Đang tiến hành
+                        option(value="on-hold" selected=(project.status == 'on-hold')) Tạm dừng
+                        option(value="completed" selected=(project.status == 'completed')) Hoàn thành
+
+                button(type="submit" class="btn btn-primary") Cập nhật

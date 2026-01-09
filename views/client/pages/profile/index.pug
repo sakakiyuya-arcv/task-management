@@ -1,0 +1,53 @@
+extends ../../layouts/default.pug
+
+block main
+    .container.mt-4
+        h1.mb-4
+            i.fas.fa-user-circle
+            |  #{pageTitle} 
+        
+        +alert-success(5000)
+        +alert-error(5000)
+
+        .row
+            .col-md-4
+                .card
+                    .card-body.text-center
+                        if account.avatar
+                            img.rounded-circle.mb-3(src=account.avatar, alt=account.fullName, width="150", height="150")
+                        else
+                            img.rounded-circle.mb-3(src="/imgs/avatar.jpg", alt=account.fullName, width="150", height="150")
+                        h4= account.fullName
+                        p.text-muted= account.email
+
+            .col-md-8
+                .card
+                    .card-header
+                        h5.mb-0 Thông tin chi tiết
+                    .card-body
+                        .row.mb-3
+                            .col-md-4
+                                strong Họ và tên:
+                            .col-md-8
+                                = account.fullName
+
+                        .row.mb-3
+                            .col-md-4
+                                strong Email:
+                            .col-md-8
+                                = account.email
+
+                        .row.mb-3
+                            .col-md-4
+                                strong Vai trò:
+                            .col-md-8
+                                span.badge.bg-info= account.role
+
+                        .text-end
+                            a.btn.btn-primary(href=`/profile/edit/${account._id}`)
+                                i.fas.fa-edit
+                                |  Chỉnh sửa thông tin
+                            |  
+                            a.btn.btn-secondary(href=`/profile/change-password/${account._id}`)
+                                i.fas.fa-key
+                                |  Đổi mật khẩu

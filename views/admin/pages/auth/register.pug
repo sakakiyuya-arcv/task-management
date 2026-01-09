@@ -1,0 +1,35 @@
+include ../../mixins/alert.pug
+
+doctype html
+html
+    +alert-success(3000)
+    +alert-error(3000)
+
+    head
+        title #{pageTitle}
+        link(rel="icon", type="image/x-icon", href="/imgs/logo.png")
+        link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css")
+        link(rel="stylesheet", href="/admin/css/style.css")
+
+    body.auth-body
+        .auth-container
+            .card
+                .card-body.p-5
+                    h2.mb-4.text-center 📝 Đăng ký
+                    form(action="/admin/register" method="POST")
+                        div(class="mb-3")
+                            label(for="fullName" class="form-label") Tên đầy đủ
+                            input(type="text" class="form-control" id="fullName" name="fullName" required)
+                        div(class="mb-3")
+                            label(for="email" class="form-label") Email
+                            input(type="email" class="form-control" id="email" name="email" required)
+                        div(class="mb-3")
+                            label(for="password" class="form-label") Mật khẩu
+                            input(type="password" class="form-control" id="password" name="password" required)
+                        button(type="submit" class="btn btn-primary w-100 mb-3") Đăng ký
+                        p.text-center
+                            | Đã có tài khoản? 
+                            a(href="/admin/login") Đăng nhập ngay
+        
+        script(src="/admin/js/script.js")
+        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js")

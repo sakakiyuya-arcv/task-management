@@ -1,0 +1,59 @@
+header.header 
+    .container-fluid 
+        .row.align-items-center
+            .col-3 
+                .inner-logo 
+                    a(href=`/dashboard` class="no-underline") TASK MANAGER
+            .col-9.text-end
+                .dropdown.d-inline-block
+                    a#dropdownUser.d-block(
+                        href="#"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        style="text-decoration: none;"
+                    )
+                        if account && account.avatar
+                            img.rounded-circle(
+                                src=account.avatar
+                                alt=account.fullName
+                                width="40"
+                                height="40"
+                                style="object-fit: cover; border: 2px solid #ddd;"
+                            )
+                        else
+                            img.rounded-circle(
+                                src="/imgs/avatar.jpg"
+                                alt=account.fullName
+                                width="40"
+                                height="40"
+                                style="object-fit: cover; border: 2px solid #ddd;"
+                            )
+                    ul.dropdown-menu.dropdown-menu-end(aria-labelledby="dropdownUser")
+                        li.px-3.py-2.border-bottom
+                            .d-flex.align-items-center
+                                if account && account.avatar
+                                    img.rounded-circle.me-2(
+                                        src=account.avatar
+                                        width="40"
+                                        height="40"
+                                    )
+                                else
+                                    img.rounded-circle.me-2(
+                                        src="/imgs/avatar.jpg"
+                                        width="40"
+                                        height="40"
+                                    )
+                                div
+                                    strong= account ? account.fullName : "User"
+                                    br
+                                    small.text-muted= account ? account.email : ""
+                        li
+                            a.dropdown-item(href="/profile")
+                                i.fas.fa-user.me-2
+                                | Thông tin cá nhân
+                        li
+                            hr.dropdown-divider
+                        li
+                            a.dropdown-item.text-danger(href="/logout")
+                                i.fas.fa-sign-out-alt.me-2
+                                | Đăng xuất

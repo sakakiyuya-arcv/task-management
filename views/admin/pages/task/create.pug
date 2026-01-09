@@ -1,0 +1,107 @@
+extends ../../layouts/default.pug
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    h1 Thêm công việc mới
+
+    .card
+        .card-body
+            form(
+                action=`${prefixAdmin}/tasks/create` 
+                method="POST"
+                )
+                input(
+                    type="hidden" 
+                    name="returnUrl" 
+                    value=(returnUrl ? returnUrl : "/admin/tasks")
+                )
+                div(class="form-group mb-3")
+                    label(for="title") Tiêu đề
+                    input(
+                        type="text" 
+                        class="form-control" 
+                        id="title" 
+                        name="title" 
+                        required
+                    )
+
+                div(class="form-group mb-3")
+                    label(for="description") Mô tả
+                    textarea(
+                        class="form-control" 
+                        id="description" 
+                        name="description" 
+                        rows="5"
+                    )
+
+                div(class="form-group mb-3")
+                    label(for="status") Trạng thái
+                    select(
+                        class="form-control" 
+                        id="status" 
+                        name="status"
+                    )
+                        option(value="todo") Todo
+                        option(value="in-progress") Đang làm
+                        option(value="done") Hoàn thành
+
+                div(class="form-group mb-3")
+                    label(for="priority") Ưu tiên
+                    select(
+                        class="form-control" 
+                        id="priority" 
+                        name="priority"
+                    )
+                        option(value="low") Thấp
+                        option(value="medium" selected) Trung bình
+                        option(value="high") Cao
+
+                div(class="form-group mb-3")
+                    label(for="due_date") Hạn chót
+                    input(
+                        type="date" 
+                        class="form-control" 
+                        id="due_date" 
+                        name="due_date"
+                    )
+
+                div(class="form-group mb-3")
+                    label(for="project_id") Project
+                    select(
+                        class="form-control" 
+                        id="project_id" 
+                        name="project_id"
+                    )
+                        option(value="") -- Chọn project --
+                        each item in projects
+                            option(value=item._id) #{item.title}
+
+                div(class="form-group mb-3")
+                    label(for="assigned_to") Thành viên phụ trách
+                    select(
+                        class="form-control" 
+                        id="assigned_to" 
+                        name="assigned_to"
+                    )
+                        option(value="") -- Chọn thành viên --
+                        each item in members
+                            option(value=item._id) #{item.fullName}
+
+                div(class="mb-3")
+                    label(class="form-label") Người hỗ trợ
+                    select(
+                        id="participants"
+                        name="participants"
+                        class="form-control select2"
+                        multiple="multiple"
+                    )
+                        if(members)
+                            each item in members
+                                option(value=item._id) #{item.fullName}
+
+                button(
+                    type="submit" 
+                    class="btn btn-primary"
+                ) Thêm mới

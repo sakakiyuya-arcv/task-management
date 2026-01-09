@@ -1,0 +1,91 @@
+extends ../../layouts/default.pug
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    h1 Quản lý thành viên
+
+    .row.mb-3
+        .col-6
+        .col-6 
+            +search(keyword)
+
+    .card.mb-3
+        .card-header Danh sách thành viên
+        .card-body
+            .row.mb-3
+                .col-3
+                    form(
+                        action=`${prefixAdmin}/team/change-multi?_method=PATCH`
+                        method="POST"
+                        form-change-multi
+                    )
+                        .input-group
+                            select(name="type" class="form-select")
+                                option(value="") -- Chọn hành động --
+                                option(value="active") Hoạt động
+                                option(value="inactive") Dừng hoạt động
+                                option(value="delete-all") Xóa tất cả
+                            button(type="submit" class="btn btn-success") Thực hiện
+                        input(type="hidden" name="ids" id="ids")
+                .col-9.text-end
+                    a(href=`${prefixAdmin}/team/create` class="btn btn-outline-success")
+                        | + Tạo thành viên mới
+
+            table(
+                class="table table-hover table-sm"
+                checkbox-multi
+            )
+                thead
+                    tr
+                        th(style="width: 3%")
+                            input(type="checkbox" name="checkall")
+                        th(style="width: 5%" class="text-center") STT
+                        th(style="width: 2%")
+                        th(style="width: 40%") Tên
+                        th(style="width: 40%") Email
+                        th(style="width: 10%")
+                tbody
+                    each member, index in members
+                        tr
+                            td(style="width: 3%")
+                                if(index + (pagination.currentPage - 1) * pagination.limititems >0)
+                                    input(
+                                        type="checkbox"
+                                        name="id"
+                                        value=member._id
+                                    )
+                            td(style="width: 5%" class="text-center") #{index + 1 + (pagination.currentPage - 1) * pagination.limititems}
+                            td(style="width: 2%")
+                            td(style="width: 40%") 
+                                a(href=`${prefixAdmin}/tasks?assigned_to=${member._id}` class="text-decoration-none") #{member.fullName}
+                            td(style="width: 40%") #{member.email}
+                            td(style="width: 10%" class="text-center")
+                                if(member.role=="member")
+                                    button(
+                                        class="btn btn-danger btn-sm ml-1"
+                                        data-id=member._id
+                                        button-delete
+                                    ) Xóa
+                                else
+                                    span(class="badge bg-primary") ADMIN
+
+    +pagination(pagination)
+
+    form(
+        action=""
+        method="POST"
+        id="form-change-status"
+        data-path=`${prefixAdmin}/team/change-status`
+    )
+
+    form(
+        action=""
+        method="POST"
+        id="form-delete-item"
+        data-path=`${prefixAdmin}/team/delete`
+    )
+
+    script(src="/admin/js/script.js")
+    script(src="/admin/js/team.js")

@@ -1,0 +1,71 @@
+extends ../../layouts/default.pug
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    h1 Dashboard
+
+    .col
+        .card.mb-5(style="border-radius: 6px;")
+            .card-header.my-task.d-flex.justify-content-between.align-items-center.text-white.fs-5(style="border-radius: 6px 6px 0 0;") 
+                span.fw-bold Thống kê công việc
+                a(href=`${prefixAdmin}/tasks` class="badge bg-secondary text-decoration-none") Tổng: #{totalTasks} 
+            .card-body.my-task(style="border-radius: 0 0 6px 6px;")
+                .row
+                    .col-md-6
+                        .card.mb-3(style="border-radius: 6px;")
+                            a(href=`${prefixAdmin}/tasks?status=done` class="text-decoration-none dashboard-link")
+                                .card-body(style="border-radius: 6px;")
+                                    h5.card-title.text-success Hoàn thành
+                                    p.card-text(class="fs-4 text-success") #{completedTasks}#{" / "}#{totalTasks}     
+                    .col-md-6
+                        .card.mb-3(style="border-radius: 6px;")
+                             a(href=`${prefixAdmin}/tasks?status=in-progress` class="text-decoration-none dashboard-link")
+                                .card-body(style="border-radius: 6px;")
+                                    h5.card-title.text-primary Đang làm
+                                    p.card-text(class="fs-4 text-primary") #{inProgressTasks}#{" / "}#{totalTasks}
+                    .col-md-6
+                        .card.mb-3(style="border-radius: 6px;")
+                            a(href=`${prefixAdmin}/tasks?status=todo` class="text-decoration-none dashboard-link")
+                                .card-body(style="border-radius: 6px;")
+                                    h5.card-title.text-warning Todo
+                                    p.card-text(class="fs-4 text-warning") #{todoTasks}#{" / "}#{totalTasks}
+                    .col-md-6
+                        .card.mb-3(style="border-radius: 6px;")
+                            a(href=`${prefixAdmin}/tasks?status=overdue` class="text-decoration-none dashboard-link")
+                                .card-body(style="border-radius: 6px;")
+                                    h5.card-title.text-danger Quá hạn
+                                    p.card-text(class="fs-4 text-danger") #{overdueTasks}#{" / "}#{totalTasks}
+
+        .card.mb-5(style="border-radius: 6px;")
+            .card-header.my-project.d-flex.justify-content-between.align-items-center.text-white.fs-5(style="border-radius: 6px 6px 0 0;") 
+                span.fw-bold Thống kê dự án
+                a(href=`${prefixAdmin}/projects` class="badge bg-secondary text-decoration-none") Tổng: #{totalProjects}
+            .card-body.my-project(style="border-radius: 0 0 6px 6px;")
+                .col
+                    .row
+                        .col-md-6
+                            .card.mb-3(style="border-radius: 6px;")
+                                a(href=`${prefixAdmin}/projects?status=completed` class="text-decoration-none dashboard-link")
+                                    .card-body(style="border-radius: 6px;")
+                                        h5.card-title.text-success Hoàn thành
+                                        p.card-text(class="fs-4 text-success") #{completedProjects}#{" / "}#{totalProjects}     
+                        .col-md-6
+                            .card.mb-3(style="border-radius: 6px;")
+                                a(href=`${prefixAdmin}/projects?status=in-progress` class="text-decoration-none dashboard-link")
+                                    .card-body(style="border-radius: 6px;")
+                                        h5.card-title.text-primary Đang làm
+                                        p.card-text(class="fs-4 text-primary") #{inProgressProjects}#{" / "}#{totalProjects}
+                        .col-md-6
+                            .card.mb-3(style="border-radius: 6px;")
+                                a(href=`${prefixAdmin}/projects?status=on-hold` class="text-decoration-none dashboard-link")
+                                    .card-body(style="border-radius: 6px;")
+                                        h5.card-title.text-warning Tạm dừng
+                                        p.card-text(class="fs-4 text-warning") #{onHoldProjects}#{" / "}#{totalProjects}
+                        .col-md-6
+                            .card.mb-3(style="border-radius: 6px;")
+                                a(href=`${prefixAdmin}/projects?status=overdue` class="text-decoration-none dashboard-link")
+                                    .card-body(style="border-radius: 6px;")
+                                        h5.card-title.text-danger Quá hạn
+                                        p.card-text(class="fs-4 text-danger") #{overdueProjects}#{" / "}#{totalProjects}

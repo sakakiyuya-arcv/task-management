@@ -1,0 +1,237 @@
+.header {
+    background: #0a58ca;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header .inner-logo a {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    transition: 0.3s;
+    position: relative;
+    white-space: nowrap;
+}
+
+.header .inner-logo a:hover {
+    text-decoration: underline;
+    color: #d1d1d1;
+}
+
+.body .sider {
+    width: 150px;
+    background: #0a57cabf;
+    color: #fff;
+    height: calc(100vh - 56px);
+    position: fixed;
+    top: 56px;
+    left: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.body .main {
+    margin:  15px;
+    position:  relative;
+    left:  150px;
+    width: calc(100% - 180px);
+}
+.inner-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.inner-menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;   
+    /* background-color: #0a57cabf; */
+    border-radius: 6px;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.2);  
+}
+.inner-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    text-decoration: underline;
+}
+
+select.form-control {
+  -webkit-appearance: menulist !important;
+  -moz-appearance: menulist !important;
+  appearance: menulist !important;
+}
+
+[show-alert] {
+  position: fixed;
+  top: 60px;
+  right: 15px;
+  z-index: 9999;
+}
+
+[show-alert].alert-hidden {
+  animation-name: alert-hidden;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+}
+
+@keyframes alert-hidden {
+  from {
+    right: 15px;
+  }
+  to {
+    right: -100%;
+    display: none;
+  }
+}
+
+[show-alert] [close-alert] {
+  background: #ffffffc4;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px; 
+}
+
+.form-group[uploade-image] {
+  display: flex;
+  flex-direction: column; 
+  gap: 10px; 
+}
+
+.image-preview {
+  width: 150px;
+  height: auto;
+  margin-top: 15px;
+  /* border: 1px solid #ddd; */
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.image-preview[src=""] {
+  display: none;
+}
+
+.no-underline,
+.no-underline:hover {
+  text-decoration: none;
+}
+
+.no-underline:hover .inner-title {
+  text-decoration: underline;
+}
+
+tbody tr.clickable-row {
+  cursor: pointer;
+}
+
+tbody tr.clickable-row:hover {
+  background-color: #f8f9fa; 
+}
+
+.my-task {
+  background-color: #6f42c1;
+}
+
+.my-task-text {
+  color: #6f42c1;
+}
+
+.my-project {
+  background-color: #0dcaf0;
+}
+
+.my-project-text {
+  color: #0dcaf0;
+}
+
+/* Dashboard card hover effect */
+a.text-decoration-none {
+    display: block;
+    transition: all 0.3s;
+}
+
+a.text-decoration-none .card-body {
+    transition: all 0.3s;
+}
+
+a.text-decoration-none:hover .card-body {
+    background-color: #dee2e6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+a.text-decoration-none:hover h5,
+a.text-decoration-none:hover p {
+    filter: brightness(1.1);
+    font-weight: 500;
+}
+
+.auth-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;  
+  background: #f5f5f5;
+}
+
+.auth-container {
+  width: 50%; 
+}
+
+/* button violet */
+:root {
+    --color-violet: #6f42c1;      
+    --color-violet-hover: #5b21a8; 
+}
+
+.btn-violet {
+    background-color: transparent; 
+    color: var(--color-violet); 
+    border: 1px solid var(--color-violet); 
+}
+
+.btn-violet:hover, 
+.btn-violet:active,
+.btn-violet:focus,
+.btn-violet.active {
+    background-color: var(--color-violet); 
+    color: #ffffff; 
+    border-color: var(--color-violet);
+}
+
+.btn-violet:active {
+    background-color: var(--color-violet-hover) !important; 
+    border-color: var(--color-violet-hover) !important;
+}
+
+/*btn-outline-info*/
+.btn-outline-info.active, 
+.btn-outline-info:active,
+.btn-outline-info:focus {
+    color: #ffffff !important; 
+}
+
+.btn-outline-info:hover {
+    color: #ffffff !important;
+}
+
+.select2-results__options {
+    max-height: 150px !important; 
+    overflow-y: auto !important;
+}
+
+
+

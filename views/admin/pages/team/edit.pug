@@ -1,0 +1,44 @@
+extends ../../layouts/default.pug
+
+block main 
+    h1 Chỉnh sửa thành viên
+
+    .card
+        .card-body
+            form(
+                action=`${prefixAdmin}/team/edit/${member._id}?_method=PATCH`
+                method="POST"
+            )
+                div(class="form-group mb-3")
+                    label(for="fullName") Tên đầy đủ
+                    input(
+                        type="text"
+                        class="form-control"
+                        id="fullName"
+                        name="fullName"
+                        value=member.fullName
+                        required
+                    )
+                
+                div(class="form-group mb-3")
+                    label(for="email") Email
+                    input(
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        value=member.email
+                        disabled
+                    )
+                
+                div(class="form-group mb-3")
+                    label(for="status") Trạng thái
+                    select(
+                        class="form-control"
+                        id="status"
+                        name="status"
+                    )
+                        option(value="active" selected=(member.status == 'active')) Hoạt động
+                        option(value="inactive" selected=(member.status == 'inactive')) Dừng hoạt động
+                
+                button(type="submit" class="btn btn-primary") Cập nhật

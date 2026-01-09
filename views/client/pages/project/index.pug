@@ -1,0 +1,88 @@
+extends ../../layouts/default.pug
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    h1 Danh sách dự án
+
+    .card.mb-3 
+        .card-header Bộ lọc và tìm kiếm 
+        .card-body
+            .row
+                .col-6
+                    +filter-status(filterStatus)
+                .col-6 
+                    +search(keyword)
+
+    .card.mb-3
+        .card-header Danh sách dự án
+        .card-body
+
+            table(
+                class="table table-hover table-sm"
+                checkbox-multi
+            )
+                thead
+                    tr
+                        th(style="width: 4%" class="text-center") STT
+                        th(style="width: 3%")
+                        th(style="width: 25%") Tiêu đề
+                        th(style="width: 30%") Mô tả
+                        th(style="width: 20%") Hạn chót
+                        th(style="width: 18%" class="text-center") Trạng thái
+        
+                tbody
+                    each project, index in projects
+                        tr(
+                            class="clickable-row"
+                            data-href=`/projects/detail/${project._id}`
+                        )
+                            td(style="width: 4%" class="text-center") #{index + 1 + (pagination.currentPage - 1) * pagination.limititems}
+                            td(style="width: 3%")
+                            td(style="width: 25%") #{project.title}
+                            td(style="width: 30%") #{project.description ? project.description.substring(0, 50) : ''}
+                            td(style="width: 20%") 
+                                if(project.overdue)
+                                    span.text-danger #{project.due_date ? new Date(project.due_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+                                    |&emsp;
+                                    span(class="badge bg-danger") Quá hạn
+                                else 
+                                    |#{project.due_date ? new Date(project.due_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+                            td(style="width: 15%" class="text-center align-middle")
+                                if project.status == "in-progress"
+                                    button(
+                                        type="button"
+                                        data-status=project.status
+                                        data-id=project._id
+                                        button-change-status
+                                        class="badge bg-primary border-0 d-block mx-auto"
+                                        style ="width: 60%; text-align: center; cursor: pointer;"
+                                    ) Đang tiến hành
+                                else if project.status == "on-hold"
+                                    button(
+                                        type="button"
+                                        data-status=project.status
+                                        data-id=project._id
+                                        button-change-status
+                                        class="badge bg-warning border-0 d-block mx-auto"
+                                        style ="width: 60%; text-align: center; cursor: pointer;"
+                                    ) Tạm dừng
+                                else if project.status == "completed"
+                                    button(
+                                        type="button"
+                                        data-status=project.status
+                                        data-id=project._id
+                                        button-change-status
+                                        class="badge bg-success border-0 d-block mx-auto"
+                                        style ="width: 60%; text-align: center; cursor: pointer;"
+                                    ) Hoàn thành
+    
+    +pagination(pagination)
+
+    form#form-change-status(
+        method="POST"
+        data-path="/projects/change-status"
+    )
+
+    script(src="/client/js/project.js")

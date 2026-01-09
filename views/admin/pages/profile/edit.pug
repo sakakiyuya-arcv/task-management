@@ -1,0 +1,78 @@
+extends ../../layouts/default.pug
+
+block main
+    .container.mt-4
+        h1.mb-4
+            i.fas.fa-user-edit
+            |  #{pageTitle}
+        
+        +alert-success(5000)
+        +alert-error(5000)
+
+        .row
+            .col-md-8.mx-auto
+                .card
+                    .card-body
+                        form(
+                            action=`${prefixAdmin}/profile/edit/${account._id}?_method=PATCH`
+                            method="POST"
+                            enctype="multipart/form-data"
+                        )
+                            .row.mb-3
+                                .col-md-12.text-center
+                                    if account.avatar
+                                        img#preview-avatar.rounded-circle.mb-3(
+                                            src=account.avatar
+                                            alt=account.fullName
+                                            width="150"
+                                            height="150"
+                                        )
+                                    else
+                                        img#preview-avatar.rounded-circle.mb-3(
+                                            src="/imgs/avatar.jpg"
+                                            alt=account.fullName
+                                            width="150"
+                                            height="150"
+                                        )
+                                    .mb-2
+                                        label.btn.btn-sm.btn-outline-primary(for="avatar")
+                                            i.fas.fa-upload
+                                            |  Chọn ảnh đại diện
+                                        input#avatar.d-none(
+                                            type="file"
+                                            name="avatar"
+                                            accept="image/*"
+                                        )
+
+                            .mb-3
+                                label.form-label(for="fullName") Họ và tên 
+                                    span.text-danger *
+                                input#fullName.form-control(
+                                    type="text"
+                                    name="fullName"
+                                    value=account.fullName
+                                    required
+                                    placeholder="Nhập họ tên"
+                                )
+
+                            .mb-3
+                                label.form-label(for="email") Email 
+                                    span.text-danger *
+                                input#email.form-control(
+                                    type="email"
+                                    name="email"
+                                    value=account.email
+                                    required
+                                    placeholder="Nhập email"
+                                )
+
+                            .text-end
+                                a.btn.btn-secondary(href=`${prefixAdmin}/profile`)
+                                    i.fas.fa-arrow-left
+                                    |  Quay lại
+                                |  
+                                button.btn.btn-primary(type="submit")
+                                    i.fas.fa-save
+                                    |  Lưu thay đổi
+
+        script(src="/admin/js/profile.js") 

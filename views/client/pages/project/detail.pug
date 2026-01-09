@@ -1,0 +1,139 @@
+extends ../../layouts/default.pug
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    h1 #{pageTitle}
+
+    .card.mb-3 
+        .card-header Bộ lọc và tìm kiếm 
+        .card-body
+            .row
+                .col-6
+                    +filter-status(filterStatus)
+                .col-6 
+                    +search(keyword)
+
+    .card.mb-3
+        .card-header Danh sách công việc
+        .card-body
+            .row.mb-3
+                .col-3
+                    form(
+                        action=`/tasks/change-multi?_method=PATCH`
+                        method="POST"
+                        form-change-multi
+                    )
+                        .input-group
+                            select(name="type" class="form-select")
+                                option(value="") -- Chọn hành động --
+                                option(value="todo") Đặt thành Todo
+                                option(value="in-progress") Đặt thành Đang làm
+                                option(value="done") Đặt thành Hoàn thành
+                            button(type="submit" class="btn btn-success") Thực hiện
+                        input(type="hidden" name="ids" id="ids")
+            
+            table(
+                class="table table-hover table-sm"
+                checkbox-multi
+            )
+                thead
+                    tr
+                        th(style="width: 2%")
+                            input(type="checkbox" name="checkall")
+                        th(style="width: 4%" class="text-center") STT
+                        th(style="width: 1%")
+                        th(style="width: 18%") Tiêu đề
+                        th(style="width: 12%" class="text-center") Trạng thái
+                        th(style="width: 8%" class="text-center") Ưu tiên
+                        th(style="width: 15%") Hạn chót
+                        th(style="width: 20%") Dự án
+                        th(style="width: 20%") Thành viên phụ trách
+
+                tbody
+                    each task, index in tasks
+                        tr
+                            td(style="width: 2%" class="align-middle")
+                                if(!task.project_id || task.project_id.status != "on-hold")
+                                    input(
+                                        type="checkbox"
+                                        name="id"
+                                        value=task._id
+                                    )
+                            td(style="width: 4%" class="text-center align-middle") #{index + 1 + (pagination.currentPage - 1) * pagination.limititems}
+                            td(style="width: 1%")
+                            td(style="width: 18%" class="align-middle")
+                                a(href=`${prefixAdmin}/tasks/detail/${task._id}` class="text-decoration-none") #{task.title}
+                            td(style="width: 12%" class="text-center align-middle")
+                                if task.status == "todo"
+                                    a(
+                                        href="javascript:;" 
+                                        data-status=task.status
+                                        data-id=task._id
+                                        button-change-status
+                                        class="badge bg-secondary text-decoration-none"
+                                        style = "width: 100%"
+                                    ) Todo
+                                else if task.status == "in-progress"
+                                    a(
+                                        href="javascript:;" 
+                                        data-status=task.status
+                                        data-id=task._id
+                                        button-change-status
+                                        class="badge bg-primary text-decoration-none"
+                                        style = "width: 100%"
+                                    ) Đang làm
+                                else
+                                    a(
+                                        href="javascript:;" 
+                                        data-status=task.status
+                                        data-id=task._id
+                                        button-change-status
+                                        class="badge bg-success text-decoration-none"
+                                        style = "width: 100%"
+                                        class="text-center"
+                                    ) Hoàn thành
+                            td(style="width: 8%" class="text-center align-middle")
+                                if task.priority == "low"
+                                    span(class="badge bg-info d-block mx-auto" style = "width: 80%") Thấp
+                                else if task.priority == "medium"
+                                    span(class="badge bg-warning d-block mx-auto" style = "width: 80%") Trung bình
+                                else
+                                    span(class="badge bg-danger d-block mx-auto" style = "width: 80%") Cao
+                            td(style="width: 15%" class="align-middle")
+                                if(task.overdue)
+                                    if(task.status != 'done')
+                                        span.text-danger #{task.due_date ? new Date(task.due_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+                                        |&emsp;
+                                        span(class="badge bg-danger") Quá hạn
+                                    else 
+                                        |#{task.due_date ? new Date(task.due_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+                                        |&emsp;
+                                        span(class="badge bg-warning") Xong muộn
+                                else 
+                                    |#{task.due_date ? new Date(task.due_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+                            td(style="width: 20%") 
+                                if(task.project_id && task.project_id.status == "on-hold")
+                                    span.text-warning #{ task.project_id.title }
+                                else
+                                    |#{ task.project_id ? task.project_id.title : ''}
+                            td(style="width: 20%" class="align-middle") #{task.assigned_to? task.assigned_to.fullName : ''}
+                            
+    +pagination(pagination)
+
+    form(
+        action=""
+        method="POST"
+        id="form-change-status"
+        data-path=`/tasks/change-status`
+    )
+
+    form(
+        action=""
+        method="POST"
+        id="form-delete-item"
+        data-path=`/tasks/delete`
+    )
+
+    script(src="/client/js/task.js")

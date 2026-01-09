@@ -1,0 +1,152 @@
+extends ../../layouts/default.pug
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    h1 #{task.title}
+
+    .row
+        .col-8
+            .card.mb-3
+                .card-header Chi tiết công việc
+                .card-body
+                    div(class="mb-3")
+                        strong Tiêu đề:
+                        p #{task.title}
+                    
+                    div(class="mb-3")
+                        strong Mô tả:
+                        p !{task.description}
+                    
+                    div(class="mb-3")
+                        strong Trạng thái:&emsp;
+                        if task.status == "todo"
+                            span(class="badge bg-secondary") Todo
+                        else if task.status == "in-progress"
+                            span(class="badge bg-primary") Đang làm
+                        else
+                            span(class="badge bg-success") Hoàn thành
+                    
+                    div(class="mb-3")
+                        strong Ưu tiên:&emsp;
+                        if task.priority == "low"
+                            span(class="badge bg-info") Thấp
+                        else if task.priority == "medium"
+                            span(class="badge bg-warning") Trung bình
+                        else
+                            span(class="badge bg-danger") Cao
+                    
+                    div(class="mb-3")
+                        strong Hạn chót:
+                        p #{task.due_date ? new Date(task.due_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+                    
+                    div(class="mb-3")
+                        strong Dự án:
+                        p #{task.project_id ? task.project_id.title : ''}
+                    
+                    div(class="mb-3")
+                        strong Thành viên phụ trách:
+                        p #{task.assigned_to ? task.assigned_to.fullName : ''}
+                    
+                    div(class="mb-4")
+                        span(class="fw-bold") Người hỗ trợ: 
+                        
+                        if (task.participants && task.participants.length > 0)
+                            div(class="mt-2")
+                                each item in task.participants
+                                    span(class="badge bg-secondary me-2") #{item.fullName}
+
+                    div(class="mb-3")
+                        strong Ngày tạo:
+                        p #{new Date(task.createdAt).toLocaleDateString('vi-VN', dateOptions)}
+
+                    div(class="mb-3")
+                        strong Ngày hoàn thành:
+                        p #{task.done_date ? new Date(task.done_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+        .col-4
+            .card
+                .card-header Hành động
+                .card-body
+                    a(href=`${prefixAdmin}/tasks/edit/${task._id}` class="btn btn-warning w-100 mb-2") ✏️ Chỉnh sửa
+                    button(
+                        class="btn btn-secondary w-100" 
+                        button-back
+                    ) ← Quay lại
+
+            .card
+                .card-header Tệp đính kèm
+                .card-body
+                    div(class="mb-3")
+                        form(id="uploadForm")
+                            .input-group
+                                input(type="file" class="form-control" id="fileInput" multiple)
+                                button(type="submit" class="btn btn-primary") Upload
+                    
+                    if task.attachments && task.attachments.length > 0
+                        ul(class="list-group")
+                            each attachment, index in task.attachments
+                                li(class="list-group-item d-flex justify-content-between align-items-center")
+                                    div
+                                        a(href=attachment.url target="_blank") #{attachment.filename} 
+                                        small.text-muted.ms-2 (#{(attachment.size/1024).toFixed(2)}KB)
+                                    button(
+                                        type="button"
+                                        class="btn btn-danger btn-sm"
+                                        onclick=`deleteAttachment('${task._id}', ${index})`
+                                    ) Xóa
+                    else
+                        p.text-muted Chưa có tệp nào
+
+    script.
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+
+        if(uploadForm) {
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const files = fileInput.files;
+                
+                if(files.length === 0) {
+                    alert('Vui lòng chọn file');
+                    return;
+                }
+
+                for(const file of files) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    try {
+                        const response = await fetch(`#{prefixAdmin}/tasks/#{task._id}/upload`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        
+                        const data = await response.json();
+                        if(data.success) {
+                            location.reload();
+                        } else {
+                            alert(data.error);
+                        }
+                    } catch(error) {
+                        alert('Lỗi upload: ' + error);
+                    }
+                }
+            });
+        }
+
+        function deleteAttachment(taskId, index) {
+            if(!confirm('Xóa file này?')) return;
+            
+            fetch(`#{prefixAdmin}/tasks/${taskId}/delete-attachment/${index}`, {
+                method: 'DELETE'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    location.reload();
+                } else {
+                    alert(data.error);
+                }
+            });
+        }

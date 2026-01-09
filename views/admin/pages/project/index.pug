@@ -1,0 +1,131 @@
+extends ../../layouts/default.pug
+
+block main 
+    +alert-success(3000)
+    +alert-error(3000)
+
+    h1 Danh sách dự án
+
+    .card.mb-3 
+        .card-header Bộ lọc và tìm kiếm 
+        .card-body
+            .row
+                .col-6
+                    +filter-status(filterStatus)
+                .col-6 
+                    +search(keyword)
+
+    .card.mb-3
+        .card-header Danh sách dự án
+        .card-body
+            .row.mb-3
+                .col-3
+                    form(
+                        action=`${prefixAdmin}/projects/change-multi?_method=PATCH`
+                        method="POST"
+                        form-change-multi
+                    )
+                        .input-group
+                            select(name="type" class="form-select")
+                                option(value="") -- Chọn hành động --
+                                option(value="in-progress") Đang tiến hành
+                                option(value="on-hold") Tạm dừng
+                                option(value="delete-all") Xóa tất cả
+                            button(type="submit" class="btn btn-success") Thực hiện
+                        input(type="hidden" name="ids" id="ids")
+                .col-9.text-end
+                    a(href=`${prefixAdmin}/projects/create` class="btn btn-outline-success")
+                        | + Thêm mới
+
+            table(
+                class="table table-hover table-sm"
+                checkbox-multi
+            )
+                thead
+                    tr
+                        th(style="width: 3%")
+                            input(type="checkbox" name="checkall")
+                        th(style="width: 4%" class="text-center") STT
+                        th(style="width: 3%")
+                        th(style="width: 20%") Tiêu đề
+                        th(style="width: 25%") Mô tả
+                        th(style="width: 20%") Hạn chót
+                        th(style="width: 15%" class="text-center") Trạng thái
+                        th(style="width: 10%") Hành động
+                tbody
+                    each project, index in projects
+                        tr(
+                            class="clickable-row"
+                            data-href=`${prefixAdmin}/projects/detail/${project._id}`
+                        )
+                            td(style="width: 3%")
+                                input(
+                                    type="checkbox"
+                                    name="id"
+                                    value=project._id
+                                )
+                            td(style="width: 4%" class="text-center") #{index + 1 + (pagination.currentPage - 1) * pagination.limititems}
+                            td(style="width: 3%")
+                            td(style="width: 20%") #{project.title}
+                            td(style="width: 25%") #{project.description ? project.description.substring(0, 50) : ''}
+                            td(style="width: 20%") 
+                                if(project.overdue)
+                                    span.text-danger #{project.due_date ? new Date(project.due_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+                                    |&emsp;
+                                    span(class="badge bg-danger") Quá hạn
+                                else 
+                                    |#{project.due_date ? new Date(project.due_date).toLocaleDateString('vi-VN', dateOptions) : ''}
+                            td(style="width: 15%" class="text-center align-middle")
+                                if project.status == "in-progress"
+                                    a(
+                                        href="javascript:;"
+                                        data-status=project.status
+                                        data-id=project._id
+                                        button-change-status
+                                        class="badge bg-primary text-decoration-none d-block mx-auto"
+                                        style ="width: 60%; text-align: center;"
+                                    ) Đang tiến hành
+                                else if project.status == "on-hold"
+                                    a(
+                                        href="javascript:;"
+                                        data-status=project.status
+                                        data-id=project._id
+                                        button-change-status
+                                        class="badge bg-warning text-decoration-none d-block mx-auto"
+                                        style ="width: 60%; text-align: center;"
+                                    ) Tạm dừng
+                                else if project.status == "completed"
+                                    a(
+                                        href="javascript:;"
+                                        data-status=project.status
+                                        data-id=project._id
+                                        button-change-status
+                                        class="badge bg-success text-decoration-none d-block mx-auto"
+                                        style ="width: 60%; text-align: center;"
+                                    ) Hoàn thành
+                            td(style="width: 10%")
+                                a(href=`${prefixAdmin}/projects/edit/${project._id}` class="btn btn-warning btn-sm") Sửa
+                                |#{" "}
+                                button(
+                                    class="btn btn-danger btn-sm ml-1"
+                                    data-id=project._id
+                                    button-delete
+                                ) Xóa
+
+    +pagination(pagination)
+
+    form(
+        action=""
+        method="POST"
+        id="form-change-status"
+        data-path=`${prefixAdmin}/projects/change-status`
+    )
+
+    form(
+        action=""
+        method="POST"
+        id="form-delete-item"
+        data-path=`${prefixAdmin}/projects/delete`
+    )
+
+    script(src="/admin/js/project.js")
