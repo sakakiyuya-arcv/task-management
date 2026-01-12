@@ -64,7 +64,7 @@ block main
                             td(style="width: 4%" class="text-center align-middle") #{index + 1 + (pagination.currentPage - 1) * pagination.limititems}
                             td(style="width: 1%")
                             td(style="width: 18%" class="align-middle")
-                                a(href=`${prefixAdmin}/tasks/detail/${task._id}` class="text-decoration-none") #{task.title}
+                                a(href=`/tasks/detail/${task._id}` class="text-decoration-none") #{task.title}
                             td(style="width: 12%" class="text-center align-middle")
                                 if task.status == "todo"
                                     a(
