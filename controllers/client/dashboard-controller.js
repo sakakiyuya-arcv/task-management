@@ -8,11 +8,11 @@ module.exports.index = async(req,res) => {
         const account = await Account.findOne({token: req.cookies.token, deleted: false});
         const admin = await Account.findById(account.admin);
 
-        const totalTasks = await Task.countDocuments({deleted: false, assigned_to: account._id, admin: admin._id});
-        const completedTasks = await Task.countDocuments({deleted: false, assigned_to: account._id, status: "done", admin: admin._id});
-        const inProgressTasks = await Task.countDocuments({deleted: false, assigned_to: account._id, status: "in-progress", admin: admin._id});
-        const todoTasks = await Task.countDocuments({deleted: false, assigned_to: account._id, status: "todo", admin: admin._id});
-        const overdueTasks = await Task.countDocuments({deleted: false, assigned_to: account._id, overdue: true, admin: admin._id});
+        const totalTasks = await Task.countDocuments({deleted: false, $or: [{assigned_to: account._id}, {participants: account._id}], admin: admin._id});
+        const completedTasks = await Task.countDocuments({deleted: false, $or: [{assigned_to: account._id}, {participants: account._id}], status: "done", admin: admin._id});
+        const inProgressTasks = await Task.countDocuments({deleted: false, $or: [{assigned_to: account._id}, {participants: account._id}], status: "in-progress", admin: admin._id});
+        const todoTasks = await Task.countDocuments({deleted: false, $or: [{assigned_to: account._id}, {participants: account._id}], status: "todo", admin: admin._id});
+        const overdueTasks = await Task.countDocuments({deleted: false, $or: [{assigned_to: account._id}, {participants: account._id}], overdue: true, admin: admin._id});
         const totalProjects = await Project.countDocuments({deleted: false, admin: admin._id});
         const completedProjects = await Project.countDocuments({deleted: false, status: "completed", admin: admin._id});
         const inProgressProjects = await Project.countDocuments({deleted: false, status: "in-progress", admin: admin._id});
